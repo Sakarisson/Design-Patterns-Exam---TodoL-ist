@@ -20,11 +20,13 @@ private:
     int _priority; // Also, priority is int for simplicity. Should be enum
 };
 
-class TaskList {
+class Renderer {
+public:
     virtual std::string render(std::vector<Task*>) const = 0;
 };
 
-class Numbered : public TaskList {
+class Numbered : public Renderer {
+public:
     std::string render(std::vector<Task*> tasks) const override {
         std::string rendered = "";
         int counter = 0;
@@ -35,7 +37,8 @@ class Numbered : public TaskList {
     }
 };
 
-class Bulleted : public TaskList {
+class Bulleted : public Renderer {
+public:
     std::string render(std::vector<Task*> tasks) const override {
         std::string rendered = "";
         for (auto task : tasks) {
@@ -43,6 +46,73 @@ class Bulleted : public TaskList {
         }
         return rendered;
     }
+};
+
+class OrderBy {
+public:
+    virtual std::vector<Task*> order(std::vector<Task*>) = 0;
+};
+
+class OrderByDate : public OrderBy {
+public:
+    std::vector<Task*> order(std::vector<Task*> unorderedList) override {
+        std::vector<Task*> orderedList;
+        // Sort by date into orderedList
+        return orderedList;
+    }
+};
+
+class OrderByPriority : public OrderBy {
+public:
+    std::vector<Task*> order(std::vector<Task*> unorderedList) override {
+        std::vector<Task*> orderedList;
+        // Sort by priority into orderedList
+        return orderedList;
+    }
+};
+
+class Unordered : public OrderBy {
+public:
+    std::vector<Task*> order(std::vector<Task*> unorderedList) override {
+        return unorderedList;
+    }
+};
+
+class OrderAlphabetically : public OrderBy {
+public:
+    std::vector<Task*> order(std::vector<Task*> unorderedList) override {
+        std::vector<Task*> orderedList;
+        // Sort alphabetically into orderedList
+        return orderedList;
+    }
+};
+
+class Frontend {
+public:
+    Frontend(Renderer* renderer, OrderBy* orderBy, std::vector<Task*> tasks) {
+        _renderer = renderer;
+        _orderBy = orderBy;
+        _tasks = tasks;
+    }
+
+    void addTask(Task* task) {
+        _tasks.push_back(task);
+    }
+
+    bool removeTask(int index) {
+        // Remove task at index
+        bool taskRemoved = true; // Will be false if operation fails
+        return taskRemoved;
+    }
+
+    void showList() {
+        std::cout << _renderer->render(_orderBy->order(_tasks));
+    }
+
+private:
+    Renderer* _renderer;
+    OrderBy* _orderBy;
+    std::vector<Task*> _tasks;
 };
 
 int main() {
