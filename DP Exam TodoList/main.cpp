@@ -16,7 +16,7 @@ public:
 
 private:
     std::string _description;
-    int _date; // For simplicity, date is an int
+    int _date; // For simplicity, date is an int. For now, assume UNIX epoch
     int _priority; // Also, priority is int for simplicity. Should be enum
 };
 
@@ -31,7 +31,7 @@ public:
         std::string rendered = "";
         int counter = 0;
         for (auto task : tasks) {
-            rendered += ++counter + ". " + task->getDescription() + " Due: " + std::to_string(task->getDate()) + " Priority: " + std::to_string(task->getPriority()) + "\n";
+            rendered += std::to_string(++counter) + ". " + task->getDescription() + " Due: " + std::to_string(task->getDate()) + " Priority: " + std::to_string(task->getPriority()) + "\n";
         }
         return rendered;
     }
@@ -116,5 +116,12 @@ private:
 };
 
 int main() {
+    std::vector<Task*> tasks;
+    tasks.push_back(new Task("Buy groceries", 1371686400, 3));
+    tasks.push_back(new Task("Take the DT063G exam", 1371686400, 2));
+    tasks.push_back(new Task("Submit the labs", 1371859200, 2));
+    tasks.push_back(new Task("Buy movie tickets", 1371254400, 1));
+    Frontend front(new Bulleted(), new Unordered(), tasks);
+    front.showList();
     return 0;
 }
